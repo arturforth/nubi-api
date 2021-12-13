@@ -1,10 +1,10 @@
-import re
-
-from flask import Flask, request, json, Response
 from flask import Flask, request, json, Response, abort
 from pymongo import MongoClient
 import datetime
+import re
 from bson import ObjectId
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 print("connecting database...")
 client = MongoClient(host='db')
@@ -32,6 +32,7 @@ class MongoAPI:
 
 
 app = Flask(__name__)
+limiter = Limiter(app, key_func=get_remote_address)
 
 
 @app.route('/')
@@ -40,11 +41,12 @@ def base():
 
 
 @app.route('/addAnswer')
+@limiter.limit('1 per second')
 def answers_post():
     data = request.json
 
     if 'poll_id' in data and 'answer' in data:
-        if data['answer'] is not '':
+        if data['answer'] != '':
             polls = MongoAPI("polls").read()
             polls_ids = [poll['_id'] for poll in polls]
             if data['poll_id'] not in polls_ids:
@@ -58,6 +60,7 @@ def answers_post():
 
 
 @app.route('/addPoll')
+@limiter.limit('1 per second')
 def polls_post():
     data = request.json
     if 'question' in data:
@@ -73,6 +76,7 @@ def polls_post():
 
 
 @app.route('/getPolls')
+@limiter.limit('1 per second')
 def polls_get():
     polls = MongoAPI("polls").read()
     answers = MongoAPI("answers").read()
