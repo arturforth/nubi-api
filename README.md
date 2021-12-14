@@ -36,3 +36,15 @@ El commit original tendrá que ser con los archivos tal cual te los damos.
 Cada propuesta que elijas implementar deberá ser desarrollada en un commit independiente.
 
 La documentación de la solución (problemas encontrados y justificaciones) también deberá estar en el mismo repo. Podés usar el formato que prefieras, mientras más detallado mejor.
+
+Las soluciones para mejorar puntos débiles que se implementaron fueron las siguientes:
+Validación de usuarios para evitar que cualquier persona pueda acceder a crear encuestas y responderlas, así como leerlas.
+Ademas se limita la cantidad de requests por unidad de tiempo para minimizar la posibilidad de ataques de denegación de servicio.
+Tambien se implementó el chequeo del formato de la información enviada en los requests.
+Por otro lado, otras cuestiones a mejorar podrian ser cambiar el método de requests, al agregar preguntas y sus respectivas
+respuestas, de GET a POST para ocultar los datos al usuario web. Se podría agregar un método para eliminar preguntas y respuestas.
+En el caso de getPolls, por ejemplo, se podría implementar que la busqueda de las respuestas la haga el motor de base de datos
+y evitar tener que obtener la totalidad de las respuestas. En el caso de tener muchas respuestas, esto puede afectar la 
+performance.
+Con respecto a lo implementado en los metodos registration() y login(), las contraseñas deberian almacenarse encriptadas
+en la base de datos y enviar los requests a traves de un canal seguro.
